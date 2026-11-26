@@ -23,7 +23,9 @@ export function LanguageSwitch({
       lang={target}
       aria-label={label}
       className={classNames(
-        "transition duration-300",
+        // 글자가 작아서 누르는 영역만 넓힘 (보이는 자리는 그대로)
+        "-m-2.5 p-2.5",
+        "transition duration-300 active:opacity-60",
         // 헤더 뒤가 진한 색이면 흰 글자 (HeaderTone 의 data-tone)
         "text-sm font-medium text-main group-data-[tone=dark]/header:text-white",
       )}

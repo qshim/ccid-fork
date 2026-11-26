@@ -100,7 +100,7 @@ export function ResearchCard({
             <span
               aria-hidden
               className={classNames(
-                "transition-transform duration-300 group-hover:translate-x-1",
+                "transition-transform duration-300 group-hover:translate-x-1 group-active:translate-x-1",
               )}
             >
               →
@@ -112,7 +112,7 @@ export function ResearchCard({
         <span
           className={classNames(
             "block self-start overflow-hidden rounded-3xl",
-            "[&_img]:transition-transform [&_img]:duration-700 [&_img]:ease-[cubic-bezier(.22,1,.36,1)] group-hover:[&_img]:scale-105",
+            "[&_img]:transition-transform [&_img]:duration-700 [&_img]:ease-[cubic-bezier(.22,1,.36,1)] group-hover:[&_img]:scale-105 group-active:[&_img]:scale-105",
           )}
         >
           <SiteImage src={theme.image} alt={theme.imageAlt} />

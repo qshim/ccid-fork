@@ -38,6 +38,8 @@ export const ko = {
   agent: {
     open: "보이스 에이전트 열기",
     hover: "클릭하여 물어보세요",
+    /** 터치 화면: 처음 한 번 구 옆에 뜨는 안내 (커서 안내 대신) */
+    tap: "눌러서 물어보세요",
     title: "cciD 에이전트",
     close: "닫기",
     talk: "말하기",
@@ -178,7 +180,9 @@ export const ko = {
     close: "닫기",
     prev: "이전 프로젝트",
     next: "다음 프로젝트",
+    /** 프로젝트 모달: 리서치 카드 위 제목 · 카드 안 버튼 */
     research: "Related research",
+    researchMore: "리서치 자세히 보기",
     ndaNote: "NDA 프로젝트라 기본 정보만 공개합니다.",
   },
   people: {

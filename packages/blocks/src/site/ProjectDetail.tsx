@@ -41,7 +41,9 @@ export type ProjectDetailLabels = {
 };
 
 /**
- * 프로젝트 모달 안쪽: 왼쪽 연도 · 회사 · 제목 · 설명 · 태그(맨 아래) / 오른쪽 관련 리서치 이미지 카드 (분야 색 그라데이션 · 영문 제목 · 자세히 보기).
+ * 프로젝트 모달 안쪽: 왼쪽 연도 · 회사 · 제목 · 설명 · 태그(맨 아래) / 오른쪽 이 프로젝트가 속한 리서치 이미지 카드.
+ * 리서치 카드: 위에 제목(labels.research, 두 언어 모두 영문 "Related research") · 카드 오른쪽 아래 알약 버튼(labels.more, "리서치 자세히 보기 →")
+ *   — 카드가 왜 있는지, 누르면 그 리서치로 간다는 것이 바로 읽히도록. 호버 · 누름: 이미지 확대 + 버튼이 흰색으로 채워지고 화살표가 밀림.
  * onClose 가 있으면 닫기 버튼을 그립니다. onNavigate 는 관련 리서치로 이동할 때 (모달 닫기용) 부릅니다.
  */
 export function ProjectDetail({
@@ -69,7 +71,7 @@ export function ProjectDetail({
           "h-9",
           className,
           "px-4",
-          "rounded-full bg-sheet/60 transition hover:bg-sheet",
+          "rounded-full bg-sheet/60 transition hover:bg-sheet active:bg-sheet",
           "font-neuehaas text-sm font-medium",
         )}
       >
@@ -142,72 +144,103 @@ export function ProjectDetail({
         ) : null}
       </div>
 
-      {/* 관련 리서치: 이미지 카드 (자기 비율) 가 세로로 쌓임 */}
-      <ul className={classNames("flex flex-col gap-4")}>
-        {project.research.map((theme) => (
-          <li key={theme.href}>
-            <Link
-              href={theme.href}
-              onClick={onNavigate}
-              cursorLabel="Open"
-              className={classNames(
-                "group block",
-                "relative overflow-hidden",
-                "rounded-2xl bg-sheet",
-                "[&_img]:transition-transform [&_img]:duration-700 [&_img]:ease-[cubic-bezier(.22,1,.36,1)] group-hover:[&_img]:scale-105",
-              )}
-            >
-              {theme.image ? (
-                <img
-                  src={theme.image.split("#")[0]}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
+      {/* 이 프로젝트가 속한 리서치: 제목 + 이미지 카드 (자기 비율) 가 세로로 쌓임 */}
+      {project.research.length ? (
+        <section
+          aria-labelledby={titleId ? `${titleId}-research` : undefined}
+          className={classNames("flex flex-col gap-3")}
+        >
+          <h3
+            id={titleId ? `${titleId}-research` : undefined}
+            className={classNames("font-neuehaas text-sm text-sub")}
+          >
+            {labels.research}
+          </h3>
+          <ul className={classNames("flex flex-col gap-4")}>
+            {project.research.map((theme) => (
+              <li key={theme.href}>
+                <Link
+                  href={theme.href}
+                  onClick={onNavigate}
+                  cursorLabel="Open"
                   className={classNames(
-                    "block aspect-[377/201] w-full object-cover",
-                  )}
-                />
-              ) : (
-                <span className={classNames("block aspect-[377/201] w-full")} />
-              )}
-              <span
-                className={classNames(
-                  "absolute inset-x-0 bottom-0",
-                  "flex items-end justify-between gap-3",
-                  "px-5 pt-20 pb-4",
-                  "bg-linear-to-t to-transparent",
-                  GRADIENT[theme.number ?? 0] ?? "from-black/70",
-                  "text-white",
-                )}
-              >
-                <span className={classNames("flex flex-col gap-0.5")}>
-                  {theme.label ? (
-                    <span
-                      className={classNames("font-neuehaas text-xs font-light")}
-                    >
-                      {theme.label}
-                    </span>
-                  ) : null}
-                  <span
-                    className={classNames(
-                      "font-neuehaas text-xl leading-tight font-light",
-                    )}
-                  >
-                    {theme.subtitle || theme.title}
-                  </span>
-                </span>
-                <span
-                  className={classNames(
-                    "shrink-0 text-xs text-gray-200 underline underline-offset-2",
+                    "group block",
+                    "relative overflow-hidden",
+                    "rounded-2xl bg-sheet",
+                    "[&_img]:transition-transform [&_img]:duration-700 [&_img]:ease-[cubic-bezier(.22,1,.36,1)] group-hover:[&_img]:scale-105 group-active:[&_img]:scale-105",
                   )}
                 >
-                  {labels.more}
-                </span>
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+                  {theme.image ? (
+                    <img
+                      src={theme.image.split("#")[0]}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className={classNames(
+                        "block aspect-[377/201] w-full object-cover",
+                      )}
+                    />
+                  ) : (
+                    <span
+                      className={classNames("block aspect-[377/201] w-full")}
+                    />
+                  )}
+                  <span
+                    className={classNames(
+                      "absolute inset-x-0 bottom-0",
+                      "flex items-end justify-between gap-3",
+                      "px-5 pt-20 pb-4",
+                      "bg-linear-to-t to-transparent",
+                      GRADIENT[theme.number ?? 0] ?? "from-black/70",
+                      "text-white",
+                    )}
+                  >
+                    <span className={classNames("flex flex-col gap-0.5")}>
+                      {theme.label ? (
+                        <span
+                          // 좁은 화면은 카드가 작아 버튼 옆에서 줄이 깨지므로 세부 분야는 숨김 (영문 제목만)
+                          className={classNames(
+                            "hidden sm:block",
+                            "font-neuehaas text-xs font-light",
+                          )}
+                        >
+                          {theme.label}
+                        </span>
+                      ) : null}
+                      <span
+                        className={classNames(
+                          "font-neuehaas text-xl leading-tight font-light",
+                        )}
+                      >
+                        {theme.subtitle || theme.title}
+                      </span>
+                    </span>
+                    {/* 누를 수 있다는 표시: 유리 알약 버튼 (호버 · 누름에 흰색으로 채워짐) */}
+                    <span
+                      className={classNames(
+                        "h-8 shrink-0",
+                        "inline-flex items-center gap-1 px-3",
+                        "rounded-full bg-white/15 backdrop-blur transition-colors duration-300 group-hover:bg-white group-hover:text-black group-active:bg-white group-active:text-black",
+                        "text-xs font-medium whitespace-nowrap",
+                      )}
+                    >
+                      {labels.more}
+                      <span
+                        aria-hidden
+                        className={classNames(
+                          "transition-transform duration-300 group-hover:translate-x-0.5 group-active:translate-x-0.5",
+                        )}
+                      >
+                        →
+                      </span>
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   );
 }

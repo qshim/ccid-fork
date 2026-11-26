@@ -85,7 +85,7 @@ export function JoinButton({
             className={classNames(
               "h-10 self-end",
               "mt-2 px-5",
-              "rounded-full bg-sheet/60 transition hover:bg-sheet",
+              "rounded-full bg-sheet/60 transition hover:bg-sheet active:bg-sheet",
               "font-neuehaas text-sm font-medium",
             )}
           >

@@ -35,10 +35,15 @@ export function InView({
   return (
     <Tag
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
+      // initial 은 서버 · 브라우저가 같아야 해서(hydration) 그대로 두고, 움직임 줄이기면 바로 보이게
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-      transition={{ duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={
+        reduce
+          ? { duration: 0 }
+          : { duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] }
+      }
     >
       {children}
     </Tag>

@@ -32,6 +32,8 @@ export default async function RootLayout({
         fontVariables,
         // 페이지 끝(푸터)에서 고무줄처럼 더 끌려가며 흰 바탕이 보이지 않게 — 푸터 배경으로 딱 끝남
         "overscroll-y-none",
+        // 창이 열려 있으면 뒤 페이지 스크롤을 막음: 약력 창(PersonCard popover, data-scroll-lock) · 모달 <dialog>(Join 안내 등)
+        "has-[[data-scroll-lock]:popover-open]:overflow-hidden has-[dialog:modal]:overflow-hidden",
       )}
       suppressHydrationWarning
     >

@@ -58,7 +58,7 @@ export function ImageCarousel({
       className={classNames(
         "group size-9",
         "flex items-center justify-center",
-        "rounded-full bg-sheet/60 transition-colors duration-300 hover:bg-black hover:text-white",
+        "rounded-full bg-sheet/60 transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white",
         "disabled:pointer-events-none disabled:opacity-30",
         "font-neuehaas",
       )}
@@ -68,8 +68,8 @@ export function ImageCarousel({
         className={classNames(
           "transition-transform duration-300",
           by === -1
-            ? "group-hover:-translate-x-0.5"
-            : "group-hover:translate-x-0.5",
+            ? "group-hover:-translate-x-0.5 group-active:-translate-x-0.5"
+            : "group-hover:translate-x-0.5 group-active:translate-x-0.5",
         )}
       >
         {by === -1 ? "←" : "→"}

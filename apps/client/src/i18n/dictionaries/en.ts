@@ -37,6 +37,7 @@ export const en: Dictionary = {
   agent: {
     open: "Open voice agent",
     hover: "Click to ask",
+    tap: "Tap to ask",
     title: "cciD Agent",
     close: "Close",
     talk: "Talk",
@@ -177,6 +178,7 @@ export const en: Dictionary = {
     prev: "Previous project",
     next: "Next project",
     research: "Related research",
+    researchMore: "Explore research",
     ndaNote: "This project is under NDA, so only basic details are shown.",
   },
   people: {

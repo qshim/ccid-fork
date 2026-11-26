@@ -48,6 +48,8 @@ export const SITE_TEXT = {
     ndaNote: "NDA 프로젝트라 기본 정보만 공개합니다.",
     research: "Related research",
     more: "자세히 보기",
+    /** 프로젝트 모달의 리서치 카드 버튼 */
+    researchMore: "리서치 자세히 보기",
     close: "닫기",
     profile: "약력 전체 보기",
   },
@@ -56,6 +58,7 @@ export const SITE_TEXT = {
     ndaNote: "This project is under NDA, so only basic details are shown.",
     research: "Related research",
     more: "Learn more",
+    researchMore: "Explore research",
     close: "Close",
     profile: "Read full bio",
   },

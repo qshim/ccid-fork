@@ -91,20 +91,20 @@ export function Section({
           {children}
           {action ? (
             <div className={classNames("mt-12 md:mt-16")}>
-              {/* 텍스트 버튼: 마우스를 올리면 밑줄 · 화살표가 밀림 */}
+              {/* 텍스트 버튼: 마우스를 올리거나 누르면 밑줄 · 화살표가 밀림 */}
               <Link
                 href={action.href}
                 className={classNames(
                   "group inline-flex items-center gap-1.5",
                   "font-neuehaas text-sm font-medium",
-                  "underline-offset-4 hover:underline",
+                  "underline-offset-4 hover:underline active:underline",
                 )}
               >
                 {action.label}
                 <span
                   aria-hidden
                   className={classNames(
-                    "transition-transform duration-300 group-hover:translate-x-1",
+                    "transition-transform duration-300 group-hover:translate-x-1 group-active:translate-x-1",
                   )}
                 >
                   →
@@ -120,7 +120,7 @@ export function Section({
 
 /**
  * 알약 모양 링크 (면 기반).
- * 마우스를 올리면 검정으로 채워지고 화살표가 그 방향으로 밀립니다.
+ * 마우스를 올리거나 누르면 검정으로 채워지고 화살표가 그 방향으로 밀립니다.
  */
 export function PillLink({
   href,
@@ -138,8 +138,8 @@ export function PillLink({
       className={classNames(
         "transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)]",
         arrow === "right"
-          ? "group-hover:translate-x-1"
-          : "group-hover:-translate-x-1",
+          ? "group-hover:translate-x-1 group-active:translate-x-1"
+          : "group-hover:-translate-x-1 group-active:-translate-x-1",
       )}
     >
       {arrow === "right" ? "→" : "←"}
@@ -153,7 +153,7 @@ export function PillLink({
         "inline-flex items-center gap-1.5",
         "px-4",
         "rounded-full bg-sheet/60",
-        "transition-colors duration-300 hover:bg-black hover:text-white",
+        "transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white",
         "font-neuehaas text-sm font-medium whitespace-nowrap",
       )}
     >

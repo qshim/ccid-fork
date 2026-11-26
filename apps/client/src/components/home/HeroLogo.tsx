@@ -50,15 +50,18 @@ export function HeroLogo({
               shadowClassName && "relative isolate",
               letterClassName,
             )}
-            initial={
-              reduce ? false : { opacity: 0, y: "35%", filter: "blur(16px)" }
-            }
+            // initial 은 서버 · 브라우저가 같아야 해서(hydration) 그대로 두고, 움직임 줄이기면 바로 보이게
+            initial={{ opacity: 0, y: "35%", filter: "blur(16px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              duration: LOGO_MOTION.durationS,
-              delay: LOGO_MOTION.startS + index * LOGO_MOTION.staggerS,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+            transition={
+              reduce
+                ? { duration: 0 }
+                : {
+                    duration: LOGO_MOTION.durationS,
+                    delay: LOGO_MOTION.startS + index * LOGO_MOTION.staggerS,
+                    ease: [0.16, 1, 0.3, 1],
+                  }
+            }
           >
             {letter}
             {shadowClassName ? (

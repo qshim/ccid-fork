@@ -21,28 +21,34 @@ const THEME_COLOR: Record<number, string> = {
 };
 
 /**
- * 호버 때 깔리는 분야 색 radial 그라데이션 (Figma 'button · 2025').
- * 소속 분야가 여러 개면 색마다 좌우로 나뉘어 자리하고, 서로 겹치는 곳에서 섞여 조합이 됩니다.
+ * 홈 프로젝트 줄에 호버 때 깔리는 분야 색 그라데이션.
+ * 겹치는 층 없이 **가로 그라데이션 하나**: 왼쪽은 아주 옅게 → 오른쪽으로 갈수록 진해짐.
+ * 소속 분야가 여러 개면 같은 그라데이션 안에서 색이 왼쪽부터 차례로 이어집니다.
  * 분야 수가 달라져도 값이 바로 바뀌어야 해서 inline style 로 만듭니다.
  */
 export function themeGlow(themes: number[]) {
   const colors = themes.flatMap((n) =>
     THEME_COLOR[n] ? [THEME_COLOR[n]] : [],
   );
-  if (!colors.length) return undefined;
-  return colors
-    .flatMap((color, i) => {
-      const x = Math.round((100 * (i + 1)) / (colors.length + 1));
-      return [
-        // 오른쪽 위 가장자리 쪽 진한 번짐
-        `radial-gradient(ellipse 55% 130% at ${Math.min(x + 15, 95)}% 5%, color-mix(in srgb, ${color} 42%, transparent), transparent 70%)`,
-        // 왼쪽 아래 번짐
-        `radial-gradient(ellipse 45% 90% at ${Math.max(x - 25, 5)}% 105%, color-mix(in srgb, ${color} 30%, transparent), transparent 70%)`,
-        // 가운데 은은한 번짐
-        `radial-gradient(ellipse 60% 100% at ${x}% 50%, color-mix(in srgb, ${color} 14%, transparent), transparent 75%)`,
-      ];
-    })
-    .join(", ");
+  const first = colors[0];
+  if (!first) return undefined;
+  const tint = (color: string, percent: number) =>
+    `color-mix(in srgb, ${color} ${percent}%, transparent)`;
+  const stops =
+    colors.length === 1
+      ? [
+          `${tint(first, 4)} 0%`,
+          `${tint(first, 10)} 50%`,
+          `${tint(first, 22)} 100%`,
+        ]
+      : [
+          `${tint(first, 4)} 0%`,
+          ...colors.map(
+            (color, i) =>
+              `${tint(color, i === colors.length - 1 ? 22 : 14)} ${Math.round((100 * (i + 1)) / colors.length)}%`,
+          ),
+        ];
+  return `linear-gradient(90deg, ${stops.join(", ")})`;
 }
 
 /**
@@ -50,7 +56,8 @@ export function themeGlow(themes: number[]) {
  * - 한 줄 카드(기본, 리서치 상세의 Projects): 바탕 없이 글만. 왼쪽 연도 → 제목(+ 같은 줄 회사명) → 설명 / 오른쪽 위 ⋯
  * - tile: 2단 격자의 흰 카드 (Projects 페이지) — 위에 제목 · 설명, 아래 왼쪽 회사명 · 오른쪽 ⋯
  * NDA 프로젝트는 흐리게 보입니다.
- * 모션: 마우스를 올리면 ⋯ 버튼이 검정으로 바뀌며 살짝 커집니다. (분야 색 그라데이션은 뺌 — themeGlow 는 홈 프로젝트에서만 씀)
+ * 모션: 마우스를 올리면 ⋯ 버튼이 검정으로 바뀌며 살짝 커집니다. 터치 화면은 누르는 동안 같은 모습 + 카드가 살짝 눌림.
+ * (분야 색 그라데이션은 뺌 — themeGlow 는 홈 프로젝트에서만 씀)
  */
 export function ProjectCard({
   project,
@@ -78,7 +85,7 @@ export function ProjectCard({
         className={classNames(
           "size-7 shrink-0",
           "flex items-center justify-center gap-[3px]",
-          "rounded-full bg-white transition duration-300 group-hover:scale-110 group-hover:bg-black group-hover:text-white",
+          "rounded-full bg-white transition duration-300 group-hover:scale-110 group-hover:bg-black group-hover:text-white group-active:scale-110 group-active:bg-black group-active:text-white",
         )}
       >
         <span className={classNames("size-[3px]", "rounded-full bg-current")} />
@@ -108,7 +115,8 @@ export function ProjectCard({
           : "flex flex-col gap-4 md:min-h-45",
         tile ? "px-8 py-7 md:px-9 md:py-8" : "px-6 py-6 md:px-8 md:py-7",
         project.nda && "opacity-50",
-        onClick && "cursor-pointer",
+        onClick &&
+          "cursor-pointer transition-[scale] duration-300 active:scale-[0.98]",
       )}
     >
       {tile ? (

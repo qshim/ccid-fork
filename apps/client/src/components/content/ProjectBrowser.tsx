@@ -12,7 +12,6 @@ type ThemeOption = Pick<Theme, "number" | "slug" | "title_ko" | "title_en">;
 /** 주소에서 고른 분야를 적는 이름: /projects?research=<분야 주소> */
 const PARAM = "research";
 
-
 /**
  * Projects 페이지: 리서치 분야로 거르기(컬러칩 버튼) + 연도별 묶음.
  * 고른 분야는 주소(?research=…)와 함께 움직여서 링크로 공유하고 뒤로 가기로 돌아갈 수 있습니다.
@@ -87,7 +86,7 @@ export function ProjectBrowser({
               "rounded-full transition-colors duration-300",
               slug === null
                 ? "bg-black text-white"
-                : "bg-sheet/60 text-main hover:bg-sheet",
+                : "bg-sheet/60 text-main hover:bg-sheet active:bg-sheet",
               "text-sm font-medium whitespace-nowrap",
             )}
           >
@@ -106,7 +105,7 @@ export function ProjectBrowser({
                 "rounded-full transition-colors duration-300",
                 slug === theme.slug
                   ? "bg-black text-white"
-                  : "bg-sheet/60 text-main hover:bg-sheet",
+                  : "bg-sheet/60 text-main hover:bg-sheet active:bg-sheet",
                 "text-sm font-medium whitespace-nowrap",
               )}
             >

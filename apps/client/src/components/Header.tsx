@@ -45,6 +45,17 @@ export async function Header() {
           "transition-opacity duration-300 group-data-[tone=dark]/header:opacity-0",
         )}
       />
+      {/*
+        흐림: 진한 배경(홈 About 보라 등) 위에서는 흰 그라데이션만으로는 스크롤된 글이 메뉴 글자와 겹쳐 보여서,
+        헤더 뒤를 흐리게 하고 아래로 갈수록 흐림이 사라지게(mask) 합니다. (헤더 자체에 걸지 않는 이유는 위 설명)
+      */}
+      <div
+        aria-hidden
+        className={classNames(
+          "pointer-events-none absolute inset-x-0 top-0 -bottom-6 -z-10",
+          "[mask-image:linear-gradient(to_bottom,black_55%,transparent)] backdrop-blur-md",
+        )}
+      />
       {/* 헤더 뒤가 진한 색인지 살펴 data-tone 을 붙임 (홈 첫 화면 보라 배경) */}
       <HeaderTone />
       {/*

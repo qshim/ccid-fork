@@ -11,6 +11,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { flushSync } from "react-dom";
+import { HOVER_QUERY, useMediaQuery } from "@/hooks";
 import type { Locale } from "@/i18n";
 import { BlobCanvas } from "./engine/BlobCanvas";
 import {
@@ -30,6 +31,8 @@ export type AgentBlobLabels = TalkLabels & {
   open: string;
   /** 구에 마우스를 올리면 커서 아래에 뜨는 안내 */
   hover: string;
+  /** 터치 화면: 처음 한 번 구 옆에 말풍선으로 뜨는 안내 */
+  tap: string;
   title: string;
   close: string;
   talk: string;
@@ -114,6 +117,46 @@ function DesignModeBlob({
 
 type Box = { top: number; left: number; width: number; height: number };
 
+/** 터치 안내 말풍선: 한 번 보여 줬으면 이 탭(세션)에서는 다시 띄우지 않음 */
+const TAP_HINT_KEY = "ccid:agent-tap-hint";
+/** 터치 안내 말풍선: 페이지가 뜨고 나서 나타나기까지 · 떠 있는 시간 (밀리초) */
+const TAP_HINT_MS = { delay: 3500, visible: 5000 };
+
+/**
+ * 터치 화면(마우스 없음)에서 처음 한 번만 true 가 되는 값.
+ * 커서 안내("클릭하여 물어보세요")를 볼 수 없으니 구가 누를 수 있는 것임을 알려 줍니다.
+ */
+function useTapHint() {
+  // 서버 · 첫 화면은 마우스가 있다고 보고(= 말풍선 없음) 시작
+  const canHover = useMediaQuery(HOVER_QUERY, true);
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (canHover) return;
+    try {
+      if (sessionStorage.getItem(TAP_HINT_KEY)) return;
+    } catch {
+      return; // 저장소를 못 쓰는 브라우저면 띄우지 않음
+    }
+    const showTimer = window.setTimeout(() => {
+      setShow(true);
+      try {
+        sessionStorage.setItem(TAP_HINT_KEY, "1");
+      } catch {
+        // 저장하지 못해도 이번에 한 번 보여 준 것으로 충분
+      }
+    }, TAP_HINT_MS.delay);
+    const hideTimer = window.setTimeout(
+      () => setShow(false),
+      TAP_HINT_MS.delay + TAP_HINT_MS.visible,
+    );
+    return () => {
+      window.clearTimeout(showTimer);
+      window.clearTimeout(hideTimer);
+    };
+  }, [canHover]);
+  return [show, () => setShow(false)] as const;
+}
+
 const boxOf = (el: Element): Box => {
   const r = el.getBoundingClientRect();
   return { top: r.top, left: r.left, width: r.width, height: r.height };
@@ -176,6 +219,7 @@ function AgentModeBlob({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   /** 한 번이라도 열렸었는지 (처음 그릴 때 오브 버튼으로 포커스를 옮기지 않도록) */
   const openedRef = useRef(false);
+  const [tapHint, hideTapHint] = useTapHint();
 
   // 사람 확인용 입력 요약은 사이트를 둘러보는 동안 조용히 모읍니다 (talk/human.ts)
   useEffect(() => watchHuman(), []);
@@ -197,6 +241,7 @@ function AgentModeBlob({
   };
 
   const openAgent = (event: MouseEvent) => {
+    hideTapHint();
     noteOpened(event.isTrusted);
     talk.greet();
     const r = rects();
@@ -328,6 +373,31 @@ function AgentModeBlob({
             }}
           />
         )}
+      </AnimatePresence>
+
+      {/* 터치 화면 안내 말풍선: 구 왼쪽에서 스르륵 나타났다 사라짐 · 눌러도 대화 창이 열림 (화면 읽기는 구 버튼 이름으로 충분) */}
+      <AnimatePresence>
+        {tapHint && !floating ? (
+          <motion.button
+            key="agent-blob-tap-hint"
+            type="button"
+            aria-hidden
+            tabIndex={-1}
+            onClick={openAgent}
+            className={classNames(
+              "absolute top-1/2 right-full -translate-y-1/2",
+              "mr-3 px-3.5 py-2",
+              "rounded-full bg-white/80 shadow-[0_4px_20px_rgb(80_40_160/0.15)] backdrop-blur",
+              "font-neuehaas text-sm font-medium whitespace-nowrap text-primary",
+            )}
+            initial={{ opacity: 0, x: 8 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 8 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {labels.tap}
+          </motion.button>
+        ) : null}
       </AnimatePresence>
 
       {/* 떠 있는 동안은 화면 전체가 무대 (클릭은 대화 창 내용과 뒤 배경만 받음) */}

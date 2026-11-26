@@ -8,7 +8,7 @@ import { stripLocale } from "@/i18n";
 
 /**
  * 헤더 메뉴 링크 (가운데 메뉴 · 모바일 메뉴 공용).
- * 마우스를 올리면 글자가 연보라(#8e84c4) + 예전 보라 그라데이션 30% 로 서서히 바뀝니다. (아래에서 차오르는 모션 없이 색만)
+ * 마우스를 올리면(터치 화면은 누르는 동안) 글자가 연보라(#8e84c4) + 예전 보라 그라데이션 30% 로 서서히 바뀝니다. (아래에서 차오르는 모션 없이 색만)
  * 지금 보고 있는 곳의 메뉴는 연보라로 고정됩니다. (aria-current)
  * - 페이지 링크(/research 등): 그 페이지 · 하위 페이지에 있을 때
  * - 구역 링크(/#about): 그 페이지에서 해당 구역이 화면 가운데를 지나는 동안
@@ -58,7 +58,7 @@ export function HeaderNavLink({
           "bg-[linear-gradient(180deg,color-mix(in_srgb,#8e84c4_70%,#2000d4),color-mix(in_srgb,#8e84c4_70%,#cb63ff))] bg-clip-text",
           isCurrent
             ? "text-transparent"
-            : "text-(--header-ink) hover:text-transparent",
+            : "text-(--header-ink) hover:text-transparent active:text-transparent",
           "transition-[color,--header-ink] duration-300 ease-out motion-reduce:transition-none",
         ],
         [

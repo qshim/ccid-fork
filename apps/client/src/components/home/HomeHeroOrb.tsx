@@ -42,7 +42,7 @@ export function HomeHeroOrb({ description }: { description: string }) {
       */}
       <div
         className={classNames(
-          "flex flex-col gap-6 md:flex-row md:items-center md:gap-[5vw]",
+          "flex flex-col gap-2 md:flex-row md:items-center md:gap-[4vw]",
         )}
       >
         {/* 큰 로고: 흰 단색 글자, 글자들이 차례로 떠오르며 선명해짐 */}
@@ -50,7 +50,7 @@ export function HomeHeroOrb({ description }: { description: string }) {
           text="cciD"
           className={classNames(
             "whitespace-nowrap",
-            "font-neuehaas text-[22vw] leading-none md:text-[11.8vw]",
+            "font-neuehaas text-[24vw] leading-none md:text-[11.8vw]",
           )}
           // 글자 안은 흰 단색 · 선명하게 (흰 빛 번짐 없음)
           letterClassName={classNames("text-white")}
@@ -61,13 +61,15 @@ export function HomeHeroOrb({ description }: { description: string }) {
             "text-transparent opacity-90",
           )}
         />
-        <div className={classNames("max-w-100", "flex flex-col gap-3.5")}>
+        <div
+          className={classNames("max-w-100", "flex flex-col gap-2 md:gap-3.5")}
+        >
           {/* 명칭 → 소개: 차례로 아래에서 페이드 인 */}
           <InView
             y={12}
             delay={FADE.nameS}
             className={classNames(
-              "font-neuehaas text-2xl leading-7 text-white [text-shadow:0_1px_14px_rgb(40_0_110/0.25)]",
+              "font-neuehaas text-[22px] md:text-2xl leading-tight text-white [text-shadow:0_1px_14px_rgb(40_0_110/0.25)]",
             )}
           >
             <p>{NAME}</p>
@@ -76,7 +78,7 @@ export function HomeHeroOrb({ description }: { description: string }) {
             y={12}
             delay={FADE.descriptionS}
             className={classNames(
-              "text-[17px] leading-normal font-medium text-white [text-shadow:0_1px_12px_rgb(40_0_110/0.3)]",
+              "text-sm md:text-[17px] leading-normal font-medium text-white [text-shadow:0_1px_12px_rgb(40_0_110/0.3)]",
             )}
           >
             <p>{description}</p>

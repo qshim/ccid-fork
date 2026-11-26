@@ -84,7 +84,7 @@ export async function Footer() {
                 className={classNames(
                   "self-start",
                   "transition",
-                  "text-sm font-medium hover:text-white/60",
+                  "text-sm font-medium hover:text-white/60 active:text-white/60",
                 )}
               >
                 {group.label}
@@ -94,7 +94,10 @@ export async function Footer() {
                   <li key={link.href}>
                     <Link
                       href={localePath(locale, link.href)}
-                      className={classNames("transition", "hover:text-white")}
+                      className={classNames(
+                        "transition",
+                        "hover:text-white active:text-white",
+                      )}
                     >
                       {link.label}
                     </Link>

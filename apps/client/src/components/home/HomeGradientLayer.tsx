@@ -187,9 +187,14 @@ export function HomeGradientLayer({ children }: { children: ReactNode }) {
             "absolute top-[max(96px,15.3svh)] left-1/2 -translate-x-1/2",
             "",
           )}
-          initial={reduce ? false : { opacity: 0, y: 80 }}
+          // initial 은 서버 · 브라우저가 같아야 해서(hydration) 그대로 두고, 움직임 줄이기면 바로 보이게
+          initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }
+          }
         >
           {/* 바깥 원: 흰색 5% · 바깥 흰 빛 (흐림 100px · 50px → 원 지름의 5.048% · 2.524%) */}
           <motion.div

@@ -80,7 +80,7 @@ export function ProjectPreview({
         >
           <ProjectDetail
             Link={PreviewLink}
-            labels={text}
+            labels={{ ...text, more: text.researchMore }}
             project={{
               ...base,
               tags: pickList(values, "tags", lang),

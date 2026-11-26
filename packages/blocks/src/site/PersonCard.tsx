@@ -112,7 +112,8 @@ export function PersonCard({
                 alt=""
                 ratio="banner"
                 fallback=""
-                className={classNames("absolute inset-0 aspect-auto")}
+                // SiteImage 기본(relative · 16:9 비율)보다 확실히 이기도록 ! — 없으면 16:9 로 남아 글 단보다 짧아짐
+                className={classNames("absolute! inset-0 aspect-auto!")}
               />
             </div>
           </>
@@ -241,14 +242,14 @@ export function PersonCard({
               className={classNames(
                 "group self-start",
                 "mt-1 inline-flex items-center gap-1",
-                "text-sm underline-offset-4 hover:underline",
+                "text-sm underline-offset-4 hover:underline active:underline",
               )}
             >
               {profileLabel}
               <span
                 aria-hidden
                 className={classNames(
-                  "transition-transform duration-300 group-hover:translate-x-0.5",
+                  "transition-transform duration-300 group-hover:translate-x-0.5 group-active:translate-x-0.5",
                 )}
               >
                 →
@@ -257,6 +258,8 @@ export function PersonCard({
             <div
               id={profileId}
               popover="auto"
+              // 열려 있는 동안 뒤 페이지 스크롤을 막는 표시 (client 레이아웃의 <html> has-[…] 클래스)
+              data-scroll-lock
               aria-label={person.name}
               className={classNames(
                 // 좁은 화면: 아래에서 올라오는 화면 폭 전체 창
@@ -302,7 +305,7 @@ export function PersonCard({
                   popoverTargetAction="hide"
                   className={classNames(
                     "h-9 shrink-0 px-4",
-                    "rounded-full bg-sheet/60 transition hover:bg-sheet",
+                    "rounded-full bg-sheet/60 transition hover:bg-sheet active:bg-sheet",
                     "font-neuehaas text-sm font-medium",
                   )}
                 >

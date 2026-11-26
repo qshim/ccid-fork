@@ -3,6 +3,7 @@
 import classNames from "classnames";
 import Link from "next/link";
 import { useState } from "react";
+import { HOVER_QUERY, useMediaQuery } from "@/hooks";
 
 /** 분야 번호 → 이미지 아래 그라데이션 색. 지금은 모든 분야가 진보라(#24202e, 이전 푸터 색) — 분야 색으로 되돌릴 땐 from-theme-NN/90 (클래스는 통째로 적어야 Tailwind 가 만들어 줍니다) */
 const GRADIENT: Record<number, string> = {
@@ -31,6 +32,7 @@ export type MoreResearchItem = {
  * 이미지는 자기 비율 그대로. 마우스를 올린(또는 포커스한) 분야는 폭이 꽉 차고 나머지는 75% 폭이라,
  * 폭이 바뀌는 만큼 높이도 따라 바뀌어 목록 전체가 자연스럽게 다시 자리를 잡습니다.
  * (좁은 화면: 이미지 위 · 글 아래 세로 카드, 글은 항상 보임)
+ * 터치 화면(마우스 없음)은 올려서 고를 수 없으므로 넓은 화면이어도 모든 분야를 선명하게 다 보여 줍니다.
  */
 export function MoreResearch({
   items,
@@ -40,12 +42,13 @@ export function MoreResearch({
   moreLabel: string;
 }) {
   const [active, setActive] = useState(0);
+  const canHover = useMediaQuery(HOVER_QUERY, true);
   if (!items.length) return null;
 
   return (
     <ol className={classNames("flex flex-col gap-10 lg:gap-4")}>
       {items.map((item, index) => {
-        const isActive = index === active;
+        const isActive = !canHover || index === active;
         return (
           <li
             key={item.href}
@@ -65,7 +68,7 @@ export function MoreResearch({
                 "group block",
                 "relative min-h-32 overflow-hidden",
                 "rounded-2xl bg-sheet",
-                "[&_img]:transition-transform [&_img]:duration-700 [&_img]:ease-[cubic-bezier(.22,1,.36,1)] group-hover:[&_img]:scale-105",
+                "[&_img]:transition-transform [&_img]:duration-700 [&_img]:ease-[cubic-bezier(.22,1,.36,1)] group-hover:[&_img]:scale-105 group-active:[&_img]:scale-105",
                 "lg:transition-[width,filter] lg:duration-700 lg:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
                 isActive ? "lg:w-full lg:blur-0" : "lg:w-3/4 lg:blur-[2.5px]",
               )}
@@ -151,7 +154,7 @@ export function MoreResearch({
                 <span
                   aria-hidden
                   className={classNames(
-                    "transition-transform duration-300 group-hover:translate-x-1",
+                    "transition-transform duration-300 group-hover:translate-x-1 group-active:translate-x-1",
                   )}
                 >
                   →
